@@ -8,6 +8,7 @@ git init $position
 sudo apt-get install pip
 sudo pip install tox
 sudo pip install virtualenv 
+sudo pip install http://tarballs.openstack.org/oslo.config/oslo.config-1.2.0a3.tar.gz#egg=oslo.config-1.2.0a3
 
 cp openstack-common.conf $position 
 cp *.txt $position 
