@@ -44,7 +44,7 @@ class ExController(rest.RestController):
         """
 
         try:
-            new_ex = pecan.request.dbapi.create_ex(ex)
+            new_ex = pecan.request.dbapi.create_ex(ex.as_dict())
             return new_ex
         except Exception:
             raise

@@ -8,4 +8,4 @@ from example.api.controllers.v1 import ex
 class Controller(object):
     """Version 1 API controller root."""
 
-    ex = ex.ExController()
+    exs = ex.ExController()

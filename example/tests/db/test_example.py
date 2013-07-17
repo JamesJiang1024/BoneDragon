@@ -57,7 +57,7 @@ class DbExTestCase(base.DbTestCase):
             c = utils.get_test_ex(id=i, uuid=uuidutils.generate_uuid())
             self.dbapi.create_ex(c)
             uuids.append(unicode(c['uuid']))
-        res = self.dbapi.get_exs(123)
+        res = self.dbapi.get_exs()
         reid = []
         for re in res:
             reid.append(re['uuid'])

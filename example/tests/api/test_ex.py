@@ -32,14 +32,14 @@ class TestEx(base.FunctionalTest):
             self.assertEqual(json[key], value)
 
     def test_simple_update(self):
-        json = self.post_json('/exs' % utils.get_test_ex()).json
+        json = self.post_json('/exs', utils.get_test_ex()).json
         uri = '/exs/%s' % (json['uuid'])
         self.put_json(uri, utils.get_test_ex(title="update"))
         json = self.get_json(uri)
         self.assertEqual(json['title'], "update")
 
     def test_simple_delete(self):
-        json = self.post_json('/exs' % utils.get_test_ex()).json
+        json = self.post_json('/exs', utils.get_test_ex()).json
         uri = '/exs/%s' % (json['uuid'])
         self.delete(uri)
         response = self.get_json(uri, expect_errors=True)

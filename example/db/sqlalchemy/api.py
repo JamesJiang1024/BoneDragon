@@ -64,7 +64,7 @@ class Ex(api.Ex):
     def __init__(self):
         pass
 
-    def get_ex(self, app, ex):
+    def get_ex(self, ex):
         query = model_query(models.Ex)
         query = add_identity_filter(query, ex)
 

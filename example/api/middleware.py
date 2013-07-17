@@ -67,7 +67,7 @@ class FaultWrapperMiddleware(object):
             if ex:
                 raise ex
             return resp
-        except exc.ExampleException as e:
+        except exc.ExException as e:
             return Fault(e)
         except Exception as e:
             return Fault(e)
