@@ -1,10 +1,11 @@
 #!/bin/bash
 
-git clone git@git.ustack.com:jimjiang/oslo-incubator.git ../oslo-incubator
+git clone https://github.com/openstack/oslo-incubator.git ../oslo-incubator
 
 position="../"$1
 
 git init $position
+sudo apt-get install pip
 sudo pip install tox
 sudo pip install virtualenv 
 
@@ -31,8 +32,8 @@ pushd $position
 git add .
 git commit -am "Init Project"
 tox -evenv -- echo 'done'
-source .tox/venv/bin/activate
-testr init
-testr run
-deactivate
+#source .tox/venv/bin/activate
+#testr init
+#testr run
+#deactivate
 popd $position
