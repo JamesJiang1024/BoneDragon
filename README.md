@@ -3,6 +3,11 @@ BoneDragon
 
 Openstack Project Template
 
+Architecture
+========
+
+![Alt text](/doc/pic/BoneDragon.png "Architecture")
+
 Getting Started
 ========
 
