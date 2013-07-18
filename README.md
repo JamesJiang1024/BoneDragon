@@ -1,7 +1,7 @@
 BoneDragon
 ==========
 
-One Key For Start A Openstack Project
+Openstack Project Template
 
 Getting Started
 ========
