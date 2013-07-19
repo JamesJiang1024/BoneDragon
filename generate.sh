@@ -32,7 +32,7 @@ find $position -name "*.py" -exec sed -i "s/example/$1/g"  {} \;
 pushd $position
 git add .
 git commit -am "Init Project"
-tox -evenv -- echo 'done'
+#tox -evenv -- echo 'done'
 #source .tox/venv/bin/activate
 #testr init
 #testr run
