@@ -13,9 +13,8 @@ Getting Started
 
 If you'd like to begin a project use openstack framework, you can use this project.
 
-  * Choose your project name, such as ``helloworld``
   * Get the BoneDragon ``git clone https://github.com/JimJiangX/BoneDragon.git``
-  * Get your project framework `./generate.sh helloworld`
+  * Get your project framework `./generate.sh helloworld`, your project maybe named `helloworld`.
 
 
 Your framework has been done, begin to have a test of your project.
