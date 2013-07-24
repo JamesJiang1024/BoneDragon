@@ -22,8 +22,8 @@ Your framework has been done, begin to have a test of your project.
   * Waiting the magic, then `cd ../helloworld`
   * Run `tox -evenv -- echo 'done'`
   * Step into venv `source .tox/venv/bin/active`
-  * pip install -r requirement.txt
-  * pip install -r test-requirement.txt
+  * pip install -r requirements.txt
+  * pip install -r test-requirements.txt
   * python setup.py develop
   * Init tests `testr init`
   * `testr run`
