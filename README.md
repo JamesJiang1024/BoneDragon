@@ -13,7 +13,10 @@ Getting Started
 
 If you'd like to begin a project use openstack framework, you can use this project.
 
+  * Make sure you have installed pip ``sudo pip -V``
+  * If your are using Mac ``brew install gnu-sed coreutils``
   * Get the BoneDragon ``git clone https://github.com/JimJiangX/BoneDragon.git``
+  * ``cd BoneDragon``
   * Get your project framework `./generate.sh helloworld`, your project maybe named `helloworld`.
 
 
@@ -32,7 +35,7 @@ After the test, do something interesting.
 
 copy your etc file `mkdir /etc/helloworld`, `cp etc/helloworld/helloworld.conf /etc/helloworld/helloworld.conf`
 
-Sync your db  ``python helloworld/cmd/manager.py``.
+Sync your db  ``python helloworld/cmd/manage.py``.
 
 Run your api: ``bin/helloworld-api``
 
