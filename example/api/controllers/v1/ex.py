@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 import pecan
@@ -29,7 +29,7 @@ class ExController(rest.RestController):
         """
         return pecan.request.dbapi.get_ex(ex)
 
-    @wsme_pecan.wsexpose(Ex, unicode)
+    @wsme_pecan.wsexpose([Ex], unicode)
     def get_all(self):
         """get all exs
 
