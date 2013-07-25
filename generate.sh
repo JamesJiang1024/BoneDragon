@@ -15,6 +15,7 @@ cp *.txt $position
 cp tox.ini $position 
 cp setup.* $position
 cp .testr.conf $position
+cp gitignore $position"/.gitignore"
 mkdir $position"/bin"
 mkdir $position"/etc"
 cp example-api $position"/bin/"$1"-api"
