@@ -7,6 +7,7 @@ from wsme import types as wtypes
 
 from example.api.controllers.v1 import base
 
+from example.api.app import ENDPOINTS
 
 class Ex(base.APIBase):
     uuid = wtypes.text
