@@ -28,7 +28,7 @@ from example.tests import base
 
 class FunctionalTest(base.TestCase):
     """Used for functional tests of Pecan controllers where you need to
-  n  test your literal application and its integration with the
+    test your literal application and its integration with the
     framework.
     """
 
