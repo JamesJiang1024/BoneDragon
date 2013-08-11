@@ -91,6 +91,11 @@ class Invalid(ExException):
     code = 400
 
 
+class InvalidIdentity(Invalid):
+    message = _("Invalid identity: %(identity).")
+    code = 400
+
+
 class NotFound(ExException):
     message = _("Resource could not be found.")
     code = 404
