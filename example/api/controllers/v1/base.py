@@ -23,6 +23,17 @@ from wsme import types as wtypes
 class APIBase(wtypes.Base):
 
     def as_dict(self):
-        return dict((k.name, getattr(self, k.name))
-                    for k in wtypes.inspect_class(self.__class__)
-                    if getattr(self, k.name) != wsme.Unset)
+      r = {}
+      for k in wtypes.inspect_class(self.__class__):
+          if getattr(self, k.name) == wsme.Unset:
+              continue
+          v = getattr(self, k.name)
+          if isinstance(v, APIBase):
+              v = v.as_dict()
+          elif isinstance(v, list):
+              v = [a.as_dict() if isinstance(a, APIBase) else a for a in v]
+          elif isinstance(v, dict):
+              v = dict((k, a.as_dict() if isinstance(a, APIBase) else a)
+                      for k, a in v.items())
+          r[k.name] = v
+      return r
