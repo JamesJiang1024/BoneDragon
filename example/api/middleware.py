@@ -60,6 +60,11 @@ class FaultWrapperMiddleware(object):
     @webob.dec.wsgify
     def __call__(self, req):
         try:
-            return req.get_response(self.app)
+            resp = req.get_response(self.app)
+            exc = req.environ.get('pecan.original_exception', None)
+            if exc:
+                # reraise original exception
+                raise exc
+            return resp
         except Exception as exc:
             return req.get_response(Fault(exc))
