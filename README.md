@@ -45,7 +45,43 @@ Run your api: ``bin/helloworld-api``
 Run `curl http://localhost:8080/v1/exs` will get api demo.
 
 
-Apache2 Deployment
+Deploy Under Apache2 In Production Env
 ========
 
+On Ubuntu
+--------
 
+* sudo apt-get install apache2 libapache2-mod-wsgi
+* modify /etc/apache2/sites-enabled/000-default like:
+
+
+<VirtualHost *:80>
+
+    ServerName www.example.com
+    ServerAlias example.com
+    ServerAdmin webmaster@example.com
+
+    DocumentRoot /usr/local/www/documents
+
+    <Directory /home/jiangwt100/WorkingProject/vitrine>
+    Order allow,deny
+    Allow from all
+    </Directory>
+
+    WSGIScriptAlias /app /home/jiangwt100/WorkingProject/vitrine/vitrine/api/app.wsgi
+
+    <Directory /home/jiangwt100/WorkingProject/vitrine>
+    Order allow,deny
+    Allow from all
+    </Directory>
+
+</VirtualHost>
+
+** directory is the install dir in you system
+
+service apache2 restart
+
+if your app did not work, `tail -f /var/log/apache2/error.log`
+
+On CentOS
+---------
