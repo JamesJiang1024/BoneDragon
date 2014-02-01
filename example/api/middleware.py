@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 #
-# Copyright © 2012 New Dream Network, LLC (DreamHost)
+# Copyright © 2013 Unitedstack Inc.
 #
-# Author: Doug Hellmann <doug.hellmann@dreamhost.com>
+# Author: Jianing YANG (jianingy@unitedstack.com)
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -15,43 +15,41 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-"""
-Middleware to replace the plain text message body of an error
-response with one formatted so the client can parse it.
 
-Based on pecan.middleware.errordocument
+"""A middleware that turns exceptions into parsable string.
 """
 
 import json
+import sys
 import traceback
 import webob
 import webob.dec
-from xml import etree as et
-
-from example.common import exception as exc
-from example.openstack.common import log
-
-
-LOG = log.getLogger(__name__)
 
 
 class Fault(object):
 
-    def __init__(self, error):
-        self.error = error
+    def __init__(self, exc):
+        self.exc = exc
+        exc_info = sys.exc_info()
+        if exc_info[2]:
+            self.traceback = traceback.format_exc(exc_info[2])
+        else:
+            self.traceback = ''
+        self.error_dict = {
+            'message': str(exc),
+            'error': {
+                'traceback': self.traceback
+            }
+        }
 
     @webob.dec.wsgify
     def __call__(self, req):
-        error = {
-            'code': getattr(self.error, 'code', 500),
-            'error_message': unicode(self.error),
-            'traceback': traceback.format_exc(),
-        }
-        response = webob.Response()
-        response.status_int = getattr(self.error, 'code', 500)
-        response.content_type = 'application/json'
-        response.unicode_body = unicode(json.dumps(error))
-        return response
+        error_body = json.dumps(self.error_dict)
+        resp = webob.Response(body=error_body, request=req)
+        resp.headers.add('Content-Type', 'application/json')
+        default_webob_exc = webob.exc.HTTPInternalServerError()
+        resp.status_code = getattr(self.exc, 'code', default_webob_exc.code)
+        return resp
 
 
 class FaultWrapperMiddleware(object):
@@ -63,71 +61,10 @@ class FaultWrapperMiddleware(object):
     def __call__(self, req):
         try:
             resp = req.get_response(self.app)
-            ex = req.environ.get('pecan.original_exception', None)
-            if ex:
-                raise ex
+            exc = req.environ.get('pecan.original_exception', None)
+            if exc:
+                # reraise original exception
+                raise exc
             return resp
-        except exc.ExException as e:
-            return Fault(e)
-        except Exception as e:
-            return Fault(e)
-
-
-class ParsableErrorMiddleware(object):
-    """Replace error body with something the client can parse.
-    """
-    def __init__(self, app):
-        self.app = app
-
-    def __call__(self, environ, start_response):
-        # Request for this state, modified by replace_start_response()
-        # and used when an error is being reported.
-        state = {}
-
-        def replacement_start_response(status, headers, exc_info=None):
-            """Overrides the default response to make errors parsable.
-            """
-            try:
-                status_code = int(status.split(' ')[0])
-                state['status_code'] = status_code
-            except (ValueError, TypeError):  # pragma: nocover
-                raise Exception((
-                    'ErrorDocumentMiddleware received an invalid '
-                    'status %s' % status
-                ))
-            else:
-                if (state['status_code'] / 100) not in (2, 3):
-                    # Remove some headers so we can replace them later
-                    # when we have the full error message and can
-                    # compute the length.
-                    headers = [(h, v)
-                               for (h, v) in headers
-                               if h not in ('Content-Length', 'Content-Type')
-                               ]
-                # Save the headers in case we need to modify them.
-                state['headers'] = headers
-                return start_response(status, headers, exc_info)
-
-        app_iter = self.app(environ, replacement_start_response)
-        if (state['status_code'] / 100) not in (2, 3):
-            req = webob.Request(environ)
-            if (req.accept.best_match(['application/json', 'application/xml'])
-                == 'application/xml'):
-                try:
-                    # simple check xml is valid
-                    body = [et.ElementTree.tostring(
-                            et.ElementTree.fromstring('<error_message>'
-                                                      + '\n'.join(app_iter)
-                                                      + '</error_message>'))]
-                except et.ElementTree.ParseError as err:
-                    LOG.error('Error parsing HTTP response: %s' % err)
-                    body = ['<error_message>%s' % state['status_code']
-                            + '</error_message>']
-                state['headers'].append(('Content-Type', 'application/xml'))
-            else:
-                body = [json.dumps({'error_message': '\n'.join(app_iter)})]
-                state['headers'].append(('Content-Type', 'application/json'))
-            state['headers'].append(('Content-Length', len(body[0])))
-        else:
-            body = app_iter
-        return body
+        except Exception as exc:
+            return req.get_response(Fault(exc))
